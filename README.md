@@ -48,3 +48,34 @@ Read one
 Update
 Delete
 ```
+
+## The complete picture
+```
+Database
+
+authors
++----+------------------+
+| id | name             |
++----+------------------+
+| 1  | George Orwell    |
++----+------------------+
+
+books
++----+--------------+-----------+
+| id | title        | author_id |
++----+--------------+-----------+
+| 1  | 1984         |     1     |
++----+--------------+-----------+
+
+              ▲
+              │
+       ForeignKey("authors.id")
+              │
+              ▼
+
+SQLAlchemy
+
+Book.author  ─────────────► Author object
+
+Author.books ─────────────► List[Book]
+```
