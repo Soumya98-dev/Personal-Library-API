@@ -1,4 +1,4 @@
-from fastapi import FastAPI, status
+from fastapi import FastAPI, HTTPException, status
 from schemas import AuthorCreate
 from fastapi import Depends
 from sqlalchemy.orm import Session
@@ -20,6 +20,16 @@ def home():
 @app.get("/authors", response_model=list[AuthorResponse])
 def list_authors(db: Session = Depends(get_db)):
     return db.query(Author).all()
+
+
+@app.get("/authors/{author_id}", response_model=AuthorResponse)
+def get_author_by_id(author_id: int, db: Session = Depends(get_db)):
+    author = db.get(Author, author_id)
+    if author is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Author not found"
+        )
+    return author
 
 
 # POST /authors → validate request → create SQLAlchemy object → save → return response.
