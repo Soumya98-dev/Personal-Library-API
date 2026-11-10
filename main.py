@@ -17,6 +17,11 @@ def home():
     return {"message": "Welcome to the personal library API project"}
 
 
+@app.get("/authors", response_model=list[AuthorResponse])
+def list_authors(db: Session = Depends(get_db)):
+    return db.query(Author).all()
+
+
 # POST /authors → validate request → create SQLAlchemy object → save → return response.
 @app.post(
     "/authors", response_model=AuthorResponse, status_code=status.HTTP_201_CREATED
