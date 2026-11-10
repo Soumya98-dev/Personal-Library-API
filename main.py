@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, status
 from schemas import AuthorCreate
 from fastapi import Depends
 from sqlalchemy.orm import Session
@@ -18,7 +18,9 @@ def home():
 
 
 # POST /authors → validate request → create SQLAlchemy object → save → return response.
-@app.post("/authors", response_model=AuthorResponse)
+@app.post(
+    "/authors", response_model=AuthorResponse, status_code=status.HTTP_201_CREATED
+)
 def create_author(author: AuthorCreate, db: Session = Depends(get_db)):
     new_author = Author(name=author.name, country=author.country)
     db.add(new_author)
